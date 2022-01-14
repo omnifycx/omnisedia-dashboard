@@ -18,7 +18,7 @@ export default {
   'page.setting.notification.update.configuration.successfully':
     'Atualizar configuração com sucesso',
   'page.setting.pageContainer.title': 'Configuração',
-  'page.setting.form.item.grafanaURL': 'Endereço do Grafana',
+  'page.setting.form.item.grafanaURL': 'URL do Grafana',
   'page.setting.form.item.grafanaURL.inputHelpMessage':
     'O endereço do Grafana deve começar com HTTP ou HTTPS',
   'page.setting.form.item.grafanaURL.inputErrorMessage': 'Endereço inválido',

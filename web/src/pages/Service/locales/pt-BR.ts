@@ -19,7 +19,7 @@ export default {
   'page.service.steps.stepTitle.pluginConfig': 'Plugin',
   'page.service.steps.stepTitle.preview': 'Visualizar',
   'page.service.list': 'Lista de serviços',
-  'página.serviço.descrição':
+  'page.service.description':
     'Um serviço consiste em uma combinação de configuração de plugin público e informações de destino upstream em uma rota. Os serviços estão associados a Rotas e Upstreams, e um serviço pode corresponder a um conjunto de nós upstream e pode ser vinculado por várias rotas.',
   'page.service.fields.name.required': 'Por favor, digite o nome do serviço',
   'page.service.fields.hosts': 'Hosts',

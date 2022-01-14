@@ -24,7 +24,7 @@ export default {
   'page.consumer.username.required': "Por favor, digite o nome do consumidor",
   'page.consumer.updateTime': 'Hora de atualização',
   'page.consumer.list': 'Lista de consumidores',
-  'página.consumidor.descrição':
+  'page.consumer.description':
     'Os consumidores são os consumidores de Rotas, por exemplo, desenvolvedores, usuários finais, chamadas de API, etc. Ao criar um consumidor, você precisa vincular pelo menos um plug-in de autenticação.',
   'page.consumer.create': 'Criar consumidor',
   'page.consumer.configure': 'Configurar consumidor',

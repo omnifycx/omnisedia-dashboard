@@ -14,15 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# FROM alpine:latest as pre-build
+FROM alpine:latest as pre-build
 
-# ARG APISIX_DASHBOARD_VERSION=master
-
-# RUN set -x \
-#     && apk add --no-cache --virtual .builddeps git \
-#     && git clone https://github.com/apache/apisix-dashboard.git -b ${APISIX_DASHBOARD_VERSION} /usr/local/apisix-dashboard \
-#     && cd /usr/local/apisix-dashboard && git clean -Xdf \
-#     && rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
+RUN set -x \
+    && apk add --no-cache --virtual .builddeps git \
+    && git clone https://github.com/omnifycx/omnisedia-dashboard.git /usr/local/apisix-dashboard \
+    && cd /usr/local/apisix-dashboard && git clean -Xdf \
+    && rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 
 FROM golang:1.14 as api-builder
 
@@ -31,6 +29,8 @@ ARG ENABLE_PROXY=false
 WORKDIR /usr/local/apisix-dashboard
 
 COPY --from=pre-build /usr/local/apisix-dashboard .
+
+RUN chmod +x ./api/build.sh 
 
 RUN if [ "$ENABLE_PROXY" = "true" ] ; then go env -w GOPROXY=https://goproxy.io,direct ; fi \
     && go env -w GO111MODULE=on \
