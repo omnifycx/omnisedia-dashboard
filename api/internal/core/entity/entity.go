@@ -101,7 +101,6 @@ type Node struct {
 	Port     int         `json:"port,omitempty"`
 	Weight   int         `json:"weight"`
 	Metadata interface{} `json:"metadata,omitempty"`
-	Priority int         `json:"priority,omitempty"`
 }
 
 type K8sInfo struct {

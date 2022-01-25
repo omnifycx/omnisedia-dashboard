@@ -67,7 +67,6 @@ export default {
   'component.global.sendTimeout': 'Enviar tempo limite',
   'component.global.receiveTimeout': 'Tempo limite de recebimento',
   'component.global.name': 'Nome',
-  'component.global.id': 'ID',
   'component.global.updateTime': 'Hora de atualização',
   'component.global.form.itemExtraMessage.nameGloballyUnique': 'O nome deve ser globalmente exclusivo',
   'component.global.input.placeholder.description':

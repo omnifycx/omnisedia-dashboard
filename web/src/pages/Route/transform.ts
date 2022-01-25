@@ -314,7 +314,6 @@ export const transformUpstreamNodes = (
 export const transformRouteData = (data: RouteModule.Body) => {
   const {
     name,
-    id,
     desc,
     labels = {},
     methods = [],
@@ -335,7 +334,6 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
-    id,
     desc,
     status,
     hosts: hosts || (host && [host]) || [''],

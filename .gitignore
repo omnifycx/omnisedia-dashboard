@@ -40,8 +40,6 @@ build
 /compose/**/nginx.pid
 /compose/etcd_data
 manager-api
-grpc-server-example/
-api/test/docker/*tar.gz*
 
 output
 apisix_logs

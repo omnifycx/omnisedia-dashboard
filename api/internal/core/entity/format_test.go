@@ -32,8 +32,7 @@ func TestNodesFormat(t *testing.T) {
 			"nodes": [{
 				"host": "127.0.0.1",
 				"port": 80,
-				"weight": 0,
-				"priority":10
+				"weight": 0
 			}]
 		}
 	}`
@@ -53,7 +52,6 @@ func TestNodesFormat(t *testing.T) {
 	assert.Contains(t, jsonStr, `"weight":0`)
 	assert.Contains(t, jsonStr, `"port":80`)
 	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
-	assert.Contains(t, jsonStr, `"priority":10`)
 }
 
 func TestNodesFormat_struct(t *testing.T) {
