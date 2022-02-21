@@ -264,7 +264,7 @@ const Page: React.FC = () => {
               </>
             ),
             onOk: () => {
-              return remove(record.id!).then(() => {
+              remove(record.id!).then(() => {
                 handleTableActionSuccessResponse(
                   `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
                     id: 'menu.routes',
@@ -334,11 +334,6 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
       fixed: 'left',
-    },
-    {
-      title: formatMessage({ id: 'component.global.id' }),
-      hideInSearch: true,
-      dataIndex: 'id',
     },
     {
       title: formatMessage({ id: 'page.route.host' }),

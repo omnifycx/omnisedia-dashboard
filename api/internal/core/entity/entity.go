@@ -101,7 +101,6 @@ type Node struct {
 	Port     int         `json:"port,omitempty"`
 	Weight   int         `json:"weight"`
 	Metadata interface{} `json:"metadata,omitempty"`
-	Priority int         `json:"priority,omitempty"`
 }
 
 type K8sInfo struct {
@@ -156,14 +155,14 @@ type UpstreamTLS struct {
 }
 
 type UpstreamKeepalivePool struct {
-	IdleTimeout *TimeoutValue `json:"idle_timeout,omitempty"`
-	Requests    int           `json:"requests,omitempty"`
-	Size        int           `json:"size"`
+	IdleTimeout TimeoutValue `json:"idle_timeout,omitempty"`
+	Requests    int          `json:"requests,omitempty"`
+	Size        int          `json:"size"`
 }
 
 type UpstreamDef struct {
 	Nodes         interface{}            `json:"nodes,omitempty"`
-	Retries       *int                   `json:"retries,omitempty"`
+	Retries       int                    `json:"retries,omitempty"`
 	Timeout       *Timeout               `json:"timeout,omitempty"`
 	Type          string                 `json:"type,omitempty"`
 	Checks        interface{}            `json:"checks,omitempty"`

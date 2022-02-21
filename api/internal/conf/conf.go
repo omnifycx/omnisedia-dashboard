@@ -151,11 +151,7 @@ func InitConf() {
 func setupConfig() {
 	// setup config file path
 	if ConfigFile == "" {
-		ConfigFile = "conf.yaml"
-		if profile := os.Getenv("APISIX_PROFILE"); profile != "" {
-			ConfigFile = "conf" + "-" + profile + ".yaml"
-		}
-		viper.SetConfigName(ConfigFile)
+		viper.SetConfigName("conf")
 		viper.SetConfigType("yaml")
 		viper.AddConfigPath(WorkDir + "/conf")
 	} else {
@@ -164,7 +160,11 @@ func setupConfig() {
 
 	// load config
 	if err := viper.ReadInConfig(); err != nil {
-		panic(fmt.Sprintf("fail to read configuration, err: %s", err.Error()))
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			panic(fmt.Sprintf("fail to find configuration: %s", ConfigFile))
+		} else {
+			panic(fmt.Sprintf("fail to read configuration: %s, err: %s", ConfigFile, err.Error()))
+		}
 	}
 
 	// unmarshal config

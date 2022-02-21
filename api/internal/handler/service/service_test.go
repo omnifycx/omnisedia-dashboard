@@ -215,10 +215,9 @@ func TestService_List(t *testing.T) {
 					Upstream: &entity.UpstreamDef{
 						Nodes: []interface{}{
 							map[string]interface{}{
-								"host":     "39.97.63.215",
-								"port":     float64(80),
-								"weight":   float64(1),
-								"priority": float64(10),
+								"host":   "39.97.63.215",
+								"port":   float64(80),
+								"weight": float64(1),
 							},
 						},
 					},
@@ -232,10 +231,9 @@ func TestService_List(t *testing.T) {
 					&entity.Service{Name: "s1", Upstream: &entity.UpstreamDef{
 						Nodes: []*entity.Node{
 							{
-								Host:     "39.97.63.215",
-								Port:     80,
-								Weight:   1,
-								Priority: 10,
+								Host:   "39.97.63.215",
+								Port:   80,
+								Weight: 1,
 							},
 						},
 					}},
