@@ -28,7 +28,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Omnisedia Dashboard',
+  title: 'Omnify API Gateway',
   pwa: false,
   iconfontUrl: '',
   serveUrlMap: {
