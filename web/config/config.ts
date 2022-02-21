@@ -29,7 +29,7 @@ export default defineConfig({
     hmr: true,
   },
   locale: {
-    default: 'en-US',
+    default: 'pt-BR',
     antd: true,
     baseNavigator: true,
   },
@@ -41,7 +41,7 @@ export default defineConfig({
   },
   routes,
   layout: {
-    name: 'Omnisedia Dashboard',
+    name: 'Omnify API Gateway',
     locale: true,
     logo: '/favicon.png',
   },

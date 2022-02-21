@@ -48,6 +48,7 @@ WORKDIR /usr/local/apisix-dashboard/web
 
 RUN if [ "$ENABLE_PROXY" = "true" ] ; then yarn config set registry https://registry.npm.taobao.org/ ; fi \
     && yarn install \
+    && npx browserslist@latest --update-db \
     && yarn build
 
 FROM alpine:latest as prod

@@ -103,7 +103,7 @@ const Page: React.FC = () => {
             </Link>
           </div>
           <div className={styles.desc}>
-            Omnisedia Dashboard
+            Omnify API Gateway
             <br />
             Cloud-Native Microservices API Gateway
           </div>

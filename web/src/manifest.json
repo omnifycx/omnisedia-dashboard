@@ -1,6 +1,6 @@
 {
-  "name": "Omnisedia Dashboard",
-  "short_name": "Omnisedia Dashboard",
+  "name": "Omnify API Gateway",
+  "short_name": "Omnify API Gateway",
   "display": "standalone",
   "start_url": "./?utm_source=homescreen",
   "theme_color": "#002140",
