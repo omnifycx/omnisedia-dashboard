@@ -33,7 +33,6 @@ import {
   Divider,
   Menu,
   Dropdown,
-  Tooltip,
 } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
@@ -265,7 +264,7 @@ const Page: React.FC = () => {
               </>
             ),
             onOk: () => {
-              return remove(record.id!).then(() => {
+              remove(record.id!).then(() => {
                 handleTableActionSuccessResponse(
                   `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
                     id: 'menu.routes',
@@ -329,12 +328,7 @@ const Page: React.FC = () => {
       </Popconfirm>
     );
   };
-  const tagStyle = {
-    maxWidth: '200px',
-    overflow: 'hidden',
-    WhiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  };
+
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
       title: formatMessage({ id: 'component.global.name' }),
@@ -342,40 +336,28 @@ const Page: React.FC = () => {
       fixed: 'left',
     },
     {
-      title: formatMessage({ id: 'component.global.id' }),
-      hideInSearch: true,
-      dataIndex: 'id',
-      width: 200,
-    },
-    {
       title: formatMessage({ id: 'page.route.host' }),
       hideInSearch: true,
-      width: 224,
       render: (_, record) => {
         const list = record.hosts || (record.host && [record.host]) || [];
 
         return list.map((item) => (
-          <Tooltip placement="topLeft" title={item}>
-            <Tag key={item} color="geekblue" style={tagStyle}>
-              {item}
-            </Tag>
-          </Tooltip>
+          <Tag key={item} color="geekblue">
+            {item}
+          </Tag>
         ));
       },
     },
     {
       title: formatMessage({ id: 'page.route.path' }),
       dataIndex: 'uri',
-      width: 224,
       render: (_, record) => {
         const list = record.uris || (record.uri && [record.uri]) || [];
 
         return list.map((item) => (
-          <Tooltip placement="topLeft" title={item}>
-            <Tag key={item} color="geekblue" style={tagStyle}>
-              {item}
-            </Tag>
-          </Tooltip>
+          <Tag key={item} color="geekblue">
+            {item}
+          </Tag>
         ));
       },
     },
@@ -383,8 +365,6 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
       hideInSearch: true,
-      ellipsis: true,
-      width: 200,
     },
     {
       title: formatMessage({ id: 'component.global.labels' }),
@@ -438,7 +418,6 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.version' }),
       dataIndex: 'API_VERSION',
-      width: 100,
       render: (_, record) => {
         return Object.keys(record.labels || {})
           .filter((item) => item === 'API_VERSION')
@@ -476,7 +455,6 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'page.route.status' }),
       dataIndex: 'status',
-      width: 100,
       render: (_, record) => (
         <>
           {record.status ? (
@@ -513,7 +491,6 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       hideInSearch: true,
-      width: 200,
       render: (text) => timestampToLocaleString(text as number),
     },
     {
@@ -521,7 +498,6 @@ const Page: React.FC = () => {
       valueType: 'option',
       fixed: 'right',
       hideInSearch: true,
-      width: 240,
       render: (_, record) => (
         <>
           <Space align="baseline">

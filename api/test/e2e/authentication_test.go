@@ -14,45 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package auth_test
+package e2e
 
 import (
 	"net/http"
-
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/extensions/table"
-
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"testing"
 )
 
-var _ = ginkgo.Describe("Authentication", func() {
-
-	table.DescribeTable("test auth module",
-		func(tc base.HttpTestCase) {
-			base.RunTestCase(tc)
-		},
-		table.Entry("Access with valid authentication token", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
+func TestAuthentication_token(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:         "Access with valid authentication token",
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"code":0`,
-		}),
-		table.Entry("Access with malformed authentication token", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
+		},
+		{
+			Desc:         "Access with malformed authentication token",
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
 			Headers:      map[string]string{"Authorization": "Not-A-Valid-Token"},
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `"message":"request unauthorized"`,
-		}),
-		table.Entry("Access without authentication token", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
+			ExpectBody:   "\"message\":\"request unauthorized\"",
+		},
+		{
+			Desc:         "Access without authentication token",
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `"message":"request unauthorized"`,
-		}),
-	)
-})
+			ExpectBody:   "\"message\":\"request unauthorized\"",
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
