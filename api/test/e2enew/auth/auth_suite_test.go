@@ -14,13 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logo from '@/assets/logo.svg';
+package auth_test
 
-export async function queryCurrent(): Promise<API.CurrentUser> {
-  return Promise.resolve({
-    name: 'Omnisedia User',
-    avatar: logo,
-    userid: '00000001',
-    access: 'admin',
-  });
+import (
+	"testing"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+)
+
+func TestAuth(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Auth Suite")
 }

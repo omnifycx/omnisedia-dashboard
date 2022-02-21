@@ -14,13 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logo from '@/assets/logo.svg';
+package route_test
 
-export async function queryCurrent(): Promise<API.CurrentUser> {
-  return Promise.resolve({
-    name: 'Omnisedia User',
-    avatar: logo,
-    userid: '00000001',
-    access: 'admin',
-  });
+import (
+	"testing"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+)
+
+func TestTrace(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Trace Suite")
 }
