@@ -19,6 +19,7 @@ package upstream
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
@@ -27,28 +28,26 @@ import (
 )
 
 // just test for schema check
-var _ = ginkgo.Describe("Upstream keepalive pool", func() {
-	ginkgo.It("create upstream with keepalive pool", func() {
+var _ = ginkgo.Describe("Upstream priority", func() {
+	ginkgo.It("create upstream with priority", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
-				"host":   base.UpstreamIp,
-				"port":   1980,
-				"weight": 1,
+				"host":     base.UpstreamIp,
+				"port":     1980,
+				"weight":   1,
+				"priority": 10,
 			},
 		}
 		createUpstreamBody["type"] = "roundrobin"
-		createUpstreamBody["keepalive_pool"] = map[string]interface{}{
-			"size":         320,
-			"requests":     1000,
-			"idle_timeout": 60,
-		}
+		createUpstreamBody["retries"] = 5
+		createUpstreamBody["retry_timeout"] = 5.5
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
 		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
-			Path:         "/apisix/admin/upstreams/kp",
+			Path:         "/apisix/admin/upstreams/priority",
 			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
@@ -58,90 +57,116 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/kp",
+			Path:         "/apisix/admin/upstreams/priority",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
 	})
 })
 
-// Test idle timeout zero and nil
-var _ = ginkgo.Describe("Test Upstream keepalive pool", func() {
-	ginkgo.It("create upstream with idle_timeout zero", func() {
+//test node priority
+var _ = ginkgo.Describe("Upstream priority", func() {
+	ginkgo.It("create upstream with priority", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/zero_idle_timeout",
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
-					"name":"upstream1",
-					"nodes":[{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}],
-					"keepalive_pool":{
-						"size":         320,
-						"requests":     1000,
-						"idle_timeout": 0
+				"nodes":[
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1980,
+						"weight": 1,
+						"priority": 1
 					},
-					"type":"roundrobin"
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1981,
+						"weight": 1,
+						"priority": 2
+					}
+				],
+				"type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
 	})
-
-	ginkgo.It("get upstream with idle_timeout zero", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/upstreams/zero_idle_timeout",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{`"id":"zero_idle_timeout"`, `"idle_timeout":0`, `"name":"upstream1"`},
-		})
-	})
-
-	ginkgo.It("create upstream with idle_timeout nil", func() {
+	ginkgo.It("create route using the upstream", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/nil_idle_timeout",
+			Path:   "/apisix/admin/routes/1",
 			Body: `{
-					"name":"upstream2",
-					"nodes":[{
-							"host":"` + base.UpstreamIp + `",
-							"port":1980,
-							"weight":1
-					}],
-					"keepalive_pool":{
-						"size":         320,
-						"requests":     1000
+				 "name": "route1",
+				  "uri": "/server_port",
+				  "upstream_id": "1"
+			  }`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("batch test /server_port api", func() {
+		// sleep for etcd sync
+		time.Sleep(time.Duration(300) * time.Millisecond)
+
+		// batch test /server_port api
+		res := base.BatchTestServerPort(12, nil, "")
+
+		gomega.Expect(res["1980"]).Should(gomega.Equal(0))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(12))
+	})
+	ginkgo.It("update upstream with priority", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
+			Body: `{
+				"nodes":[
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1980,
+						"weight": 1,
+						"priority": 3
 					},
-					"type":"roundrobin"
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1981,
+						"weight": 1,
+						"priority": 2
+					}
+				],
+				"type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
 	})
+	ginkgo.It("batch test /server_port api", func() {
+		// sleep for etcd sync
+		time.Sleep(time.Duration(300) * time.Millisecond)
 
-	ginkgo.It("get upstream with idle_timeout nil", func() {
+		// batch test /server_port api
+		res := base.BatchTestServerPort(12, nil, "")
+
+		gomega.Expect(res["1980"]).Should(gomega.Equal(12))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(0))
+	})
+	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/upstreams/nil_idle_timeout",
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{`"id":"nil_idle_timeout"`, `"name":"upstream2"`},
-			UnexpectBody: []string{`"idle_timeout":0`},
 		})
 	})
-
 	ginkgo.It("delete upstream", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/zero_idle_timeout,nil_idle_timeout",
+			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})

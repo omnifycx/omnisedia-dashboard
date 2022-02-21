@@ -111,6 +111,8 @@ export default {
   'component.pluginForm.limit-req.key.tooltip': 'A chave especificada pelo usuário para limitar a taxa.',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     'O código de status HTTP retornado quando a solicitação excede o limite é rejeitado.',
+  'component.pluginForm.limit-req.rejected_msg.tooltip':
+    'O corpo da resposta retornado quando a solicitação excede o limite é rejeitado.',
   'component.pluginForm.limit-req.nodelay.tooltip':
     'Se o sinalizador nodelay for verdadeiro, as solicitações em rajada não serão atrasadas',
 
